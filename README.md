@@ -1,4 +1,4 @@
-# HERMIS lookup
+# HERMES lookup
 
 ## Data availability
 
