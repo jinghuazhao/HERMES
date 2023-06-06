@@ -21,8 +21,8 @@ export src=~/rds/results/public/gwas/heart_failure/hermes_2020/ftp/HERMES_Jan201
 Rscript -e '
   options(width=200)
   out <- read.table("stdin",col.names=c("gene","SNP","CHR","BP","A1","A2","freq","b","se","p","N"))
-  write.table(out,file="lookup-all.tsv",quote=FALSE,row.names=FALSE,sep="\t")
-  suppressMessages(library(dplyr))
+  suppressMessages(library(tidyverse))
+  write_tsv(out,file="lookup-all.tsv.gz",quote="none")
   r <- group_by(out,gene) %>%
        slice(which.max(abs(b/se))) %>%
        data.frame
