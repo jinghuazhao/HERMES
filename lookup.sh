@@ -2,6 +2,7 @@
 
 export M=500000
 export src=~/rds/results/public/gwas/heart_failure/hermes_2020/ftp/HERMES_Jan2019_HeartFailure_summary_data.gz
+
 (
   sed '1d' doc/MAP.txt | \
   cut -f2 | \
@@ -12,8 +13,24 @@ export src=~/rds/results/public/gwas/heart_failure/hermes_2020/ftp/HERMES_Jan201
     BEGIN {
        if (start-M<1) start=1
        print chr\":\"start\"-\"end+M
-    }" > MAP.{4}
-    tabix ${src} MAP.${4}
+    }" > work/MAP.{4}
+    tabix ${src} $(cat work/MAP.{4}) | \
+    awk -vgene={4} -vOFS="\t" "{print gene,\$0}"
   '
-) > MAP.out
+) | \
+Rscript -e '
+  options(width=200)
+  out <- read.table("stdin",col.names=c("gene","SNP","CHR","BP","A1","A2","freq","b","se","p","N"))
+  write.table(out,file="lookup-all.tsv",quote=FALSE,row.names=FALSE,sep="\t")
+  suppressMessages(library(dplyr))
+  r <- group_by(out,gene) %>%
+       slice(which.max(abs(b/se))) %>%
+       data.frame
+  write.table(r,file="lookup.tsv",quote=FALSE,row.names=FALSE,sep="\t")
+'
+
+sed '1d' lookup.tsv | \
+cut -f1 | \
+uniq | \
+grep -f - -v -w doc/MAP.txt > doc/MAP.NO
 
