@@ -24,15 +24,15 @@ function f() {
 
 read chr start end gene < <(f|awk -vM=${M} 'NR==ENVIRON["SLURM_ARRAY_TASK_ID"]{if($2-M<1) $2=1;else $2=$2-M;$3=$3+M;print}')
 
-cat <(gunzip -c lookup-all.tsv.gz | head -1) \
-    <(zgrep -w ${gene} lookup-all.tsv.gz) > ${rt}/work/MAP.${gene}.lz
+cat <(gunzip -c ${rt}/results/lookup-all.tsv.gz | head -1) \
+    <(zgrep -w ${gene} ${rt}/results/lookup-all.tsv.gz) > ${rt}/work/MAP.${gene}.lz
 locuszoom --source 1000G_Nov2014 --build hg19 --pop EUR --metal ${rt}/work/MAP.${gene}.lz \
           --delim tab title="HERMES: ${gene}" \
           --markercol SNP --pvalcol p --chr ${chr} --start ${start} --end ${end} --cache None \
           --no-date --plotonly --prefix=HERMES-${gene} --rundir ${rt}/work
 EOL
 
-sbatch ${rt}/work/2_lz.sb
+sbatch --wait ${rt}/work/2_lz.sb
 
 ls ${rt}/work/HERMES*pdf | \
 xargs -l -I {} basename {} | \
