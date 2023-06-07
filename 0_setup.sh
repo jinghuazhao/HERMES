@@ -8,3 +8,8 @@ cat <(gunzip -c HERMES_Jan2019_HeartFailure_summary_data.txt.zip | head -1) \
 bgzip -f > HERMES_Jan2019_HeartFailure_summary_data.gz
 tabix -S1 -s2 -b3 -e3 HERMES_Jan2019_HeartFailure_summary_data.gz
 
+export rt=~/HERMES
+for dir in doc work results
+do
+  if [ ! -d ${rt}/${dir} ]; then mkdir ${rt}/${dir}; fi
+done
