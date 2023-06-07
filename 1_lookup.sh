@@ -12,9 +12,9 @@ export rt=~/HERMES
   parallel -C ' ' '
     awk -vchr={1} -vstart={2} -vend={3} -vM=${M} -vgene={4} "
     BEGIN {
-       if (start-M<1) start=1
+       if (start-M<1) start=1; else start=start-M
        print chr\":\"start\"-\"end+M
-    }" > work/MAP.{4}
+    }" > ${rt}/work/MAP.{4}
     tabix ${src} $(cat ${rt}/work/MAP.{4}) | \
     awk -vgene={4} -vOFS="\t" "{print gene,\$0}"
   '
