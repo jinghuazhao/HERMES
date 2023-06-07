@@ -29,9 +29,12 @@ cat <(gunzip -c lookup-all.tsv.gz | head -1) \
 locuszoom --source 1000G_Nov2014 --build hg19 --pop EUR --metal ${rt}/work/MAP.${gene}.lz \
           --delim tab title="HERMES: ${gene}" \
           --markercol SNP --pvalcol p --chr ${chr} --start ${start} --end ${end} --cache None \
-          --no-date --plotonly --prefix=HERMES-${gene} --rundir ${rt}/results
+          --no-date --plotonly --prefix=HERMES-${gene} --rundir ${rt}/work
 EOL
 
 sbatch ${rt}/work/2_lz.sb
 
-qpdf --empty --pages $(ls ${rt}/work/HERMES*pdf) -- ${rt}/results/lz.pdf
+ls ${rt}/work/HERMES*pdf | \
+xargs -l -I {} basename {} | \
+xargs -l -I {} qpdf ${rt}/work/{} --pages . 1 -- ${rt}/results/{}
+qpdf --empty --pages $(ls ${rt}/results/HERMES*pdf) -- ${rt}/results/lz.pdf
