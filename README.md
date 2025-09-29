@@ -7,7 +7,7 @@
 ## Reference
 
 Shah S, et al. Genome-wide association study provides new insights into the genetic architecture and pathogenesis of heart failure.
-*Nat Commun*. 2020 Jan 9;11(1):163. <doi:10.1038/s41467-019-13690-5>.
+*Nat Commun*. 2020 Jan 9;11(1):163. [doi:10.1038/s41467-019-13690-5](https://doi.org/10.1038/s41467-019-13690-5).
 
 ## NOTES
 
